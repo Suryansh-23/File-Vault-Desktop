@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Webix Library -->
+    <script src="webix/codebase/webix.js" type="text/javascript"></script>
+    <link
+      rel="stylesheet"
+      href="webix/codebase/skins/material.min.css"
+      type="text/css"
+    />
+
+    <!-- File Manager -->
+    <script
+      type="text/javascript"
+      src="filemanager/codebase/filemanager.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="filemanager/codebase/skins/material.css"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <!-- File Manager constructor -->
+    <script>
+      webix.ui({
+        view: "filemanager",
+        url: "http://localhost:3200/",
+        editor: false,
+        compact: true,
+      });
+    </script>
+  </body>
+</html>
