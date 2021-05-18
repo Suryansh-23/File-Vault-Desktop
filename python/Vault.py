@@ -1,11 +1,10 @@
-import json
-import os
-import pickle
-import shutil
+from json import dumps
+from os.path import splitext
+from pickle import load
 from mimetypes import guess_type as mime_type
 from urllib.parse import unquote
 
-import flask
+from flask import Flask
 from flask import jsonify, request
 
 type_map_icon = {
@@ -28,7 +27,7 @@ def manipulate(dic, sep=""):
         if str.isdigit(str(i)):
             temp["label"] = dic[i]
             key_map_file[temp["key"]] = temp["label"]
-            temp["ext"] = os.path.splitext(temp["label"])[-1][1:]
+            temp["ext"] = splitext(temp["label"])[-1][1:]
             mime = mime_type(temp["label"])[0]
             if mime:
                 file_type = mime.split("/")[0]
@@ -44,10 +43,10 @@ def manipulate(dic, sep=""):
 
 
 with open(".\.\Vault.pickle", "rb") as fobj:
-    dic = pickle.load(fobj)
+    dic = load(fobj)
 
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 dir_structure = manipulate(dic["__Tree__"])
 
 
@@ -63,7 +62,7 @@ def password():
 
 @app.route("/api/v1/tree", methods=["GET"])
 def tree():
-    return json.dumps(dir_structure)
+    return dumps(dir_structure)
 
 
 @app.route("/api/v1/save", methods=["GET"])
