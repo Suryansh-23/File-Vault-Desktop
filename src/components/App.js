@@ -11,26 +11,36 @@ import PrimeReact from "primereact/api";
 import FileManager from "./Manager";
 import "primeflex/primeflex.css";
 
+const pswrd = () => {
+  fetch("http://127.7.3.0:1728/api/v1/pswrd")
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      vaultPswrd = data;
+    })
+    .catch(() => {
+      pswrd();
+    });
+};
+const tree = () => {
+  fetch("http://127.7.3.0:1728/api/v1/tree")
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      dirStruct = data;
+    })
+    .catch(() => {
+      tree();
+    });
+};
+pswrd();
+tree();
 PrimeReact.ripple = true;
 let auth = false;
 let locked = true;
 let vaultPswrd, dirStruct;
-
-fetch("http://127.7.3.0:1728/api/v1/pswrd")
-  .then((response) => {
-    return response.json();
-  })
-  .then((data) => {
-    vaultPswrd = data;
-  });
-
-fetch("http://127.7.3.0:1728/api/v1/tree")
-  .then((response) => {
-    return response.json();
-  })
-  .then((data) => {
-    dirStruct = data;
-  });
 
 const App = () => {
   const [pswrd, setPswrd] = useState("");
@@ -99,7 +109,7 @@ const App = () => {
   };
 
   return (
-    <div className="p-d-flex p-flex-column">
+    <div className="p-d-flex p-flex-column p-pt-2">
       <div className="p-d-flex p-mb-2 p-jc-center">
         <h1 className="title p-px-3">File</h1>
         <div>

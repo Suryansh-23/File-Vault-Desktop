@@ -1,5 +1,8 @@
 from json import dumps
+<<<<<<< HEAD
 import json
+=======
+>>>>>>> f8895420b15cbc6e85a22347aad60fd5962e3a69
 from os.path import splitext
 from pickle import load
 from mimetypes import guess_type as mime_type
@@ -76,9 +79,13 @@ def password():
 
 @app.route("/api/v1/tree", methods=["GET"])
 def tree():
+<<<<<<< HEAD
     if AUTH == request.headers.get("Auth-Key"):
         return jsonify(dumps(dir_structure))
     return jsonify(False), 401
+=======
+    return dumps(dir_structure)
+>>>>>>> f8895420b15cbc6e85a22347aad60fd5962e3a69
 
 
 @app.route("/api/v1/save", methods=["GET"])
