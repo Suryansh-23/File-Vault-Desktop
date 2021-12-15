@@ -1,77 +1,78 @@
 * {
-  box-sizing: border-box;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 23px;
+    box-sizing: border-box;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23px;
 }
 
 body {
-  font-family: Montserrat;
-  display: flex;
-  margin: 0;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--surface-b);
-  color: white;
+    font-family: Montserrat;
+    display: flex;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--surface-b);
+    color: white;
 }
 
 .logo {
-  width: 10rem;
-  height: 10rem;
-  /* align-self: center; */
+    width: 10rem;
+    height: 10rem;
+    /* align-self: center; */
 }
 
 #root {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .p-password input {
-  width: 100%;
-  height: 2.4em;
-  border-radius: 25px;
-  padding-left: 20px;
-  padding-right: 5px;
+    width: 100%;
+    height: 2.4em;
+    border-radius: 25px;
+    padding-left: 20px;
+    padding-right: 5px;
 }
 .p-button {
-  border-radius: 25px;
+    border-radius: 25px;
 }
 
 input {
-  border-color: red;
+    border-color: red;
 }
 
 h3 {
-  margin-top: 0;
+    margin-top: 0;
 }
+
+.outline {
+    border-color: white;
+    border-width: medium;
+    border-radius: 10px;
+    border-style: solid;
+}
+
 .card {
-  width: 25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-color: white;
-  border-width: medium;
-  border-radius: 10px;
-  border-style: solid;
+    width: 25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .btns {
-  padding-top: 1rem;
-  justify-content: center;
+    padding-top: 1rem;
+    justify-content: center;
 }
 
 p-treenode-label {
-  width: 100%;
-}
-
-.files {
-  border-color: white;
-  border-width: medium;
-  border-radius: 10px;
-  border-style: solid;
+    width: 100%;
 }
 
 .title {
-  font-size: 6rem;
-  font-family: Montserrat;
+    font-size: 6rem;
+    font-family: Montserrat;
+}
+
+.illustration {
+    max-width: 75%;
 }

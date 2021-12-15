@@ -3,8 +3,12 @@ const url = require("url");
 const { execFile } = require("child_process");
 const { app, BrowserWindow } = require("electron");
 
-execFile("./python/Vault.exe", (e, o) => {
-  console.log(o.toString());
+execFile("./python/Vault.exe", (error, stdout, stderr) => {
+    if (error) {
+        console.error(stderr);
+        throw error;
+    }
+    console.log(stdout);
 });
 
 let mainWindow;
@@ -34,8 +38,7 @@ function createMainWindow() {
         },
     });
 
-<<<<<<< HEAD
-    const python = spawn("python", ["./python/Vault.py"]);
+    const python = execFile("python", ["./python/Vault.py"]);
     python.stdout.on("data", () => {});
 
     let indexPath;
@@ -54,25 +57,6 @@ function createMainWindow() {
             slashes: true,
         });
     }
-=======
-  let indexPath;
-
-  if (isDev && process.argv.indexOf("--noDevServer") === -1) {
-    indexPath = url.format({
-      protocol: "http:",
-      host: "localhost:8080",
-      pathname: "index.html",
-      slashes: true,
-    });
-  } else {
-    indexPath = url.format({
-      protocol: "file:",
-      pathname: path.join(__dirname, "dist", "index.html"),
-      slashes: true,
-    });
-    // mainWindow.removeMenu();
-  }
->>>>>>> f8895420b15cbc6e85a22347aad60fd5962e3a69
 
     mainWindow.loadURL(indexPath);
 
