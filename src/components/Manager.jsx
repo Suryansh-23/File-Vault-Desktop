@@ -9,70 +9,83 @@ import { Button } from "primereact/button";
 import ilstr from "../../assets/vault_illus.svg";
 const dialog = require("electron").remote.dialog;
 
-const nodeTemplate = (node, options) => {
-    if (!node["children"]) {
-        return (
-            <div className="p-d-inline-flex">
-                <span style={{ paddingRight: "15px" }}>{node["label"]}</span>
-                <Button
-                    onClick={() => {
-                        // Opens a dialog box asking the user to give the downlaod path
-                        let opts = {
-                            title: `Saving ${node.label} from Vault`,
-
-                            defaultPath:
-                                "C:\\Users\\%UserProfile%\\Desktop\\" +
-                                node.label,
-
-                            buttonLabel: "Save",
-
-                            filters: [
-                                { name: "Vault File", extensions: [node.ext] },
-                                { name: "All Files", extensions: ["*"] },
-                            ],
-                        };
-
-                        dialog
-                            .showSaveDialog(null, opts)
-                            .then((file) => {
-                                // Stating whether dialog operation was cancelled or not.
-                                if (!file.canceled) {
-                                    console.log(
-                                        "Saved At:",
-                                        file.filePath.toString()
-                                    );
-                                    fetch(
-                                        `http://127.7.3.0:1728/api/v1/save?key=${encodeURI(
-                                            node.key
-                                        )}&path=${encodeURI(
-                                            file.filePath.toString()
-                                        )}`
-                                    )
-                                        .then((response) => {
-                                            return response.json();
-                                        })
-                                        .then((data) => {
-                                            console.log(
-                                                data ? "Done" : "Not Done"
-                                            );
-                                        });
-                                }
-                            })
-                            .catch((err) => {
-                                console.error(err);
-                            });
-                    }}
-                    icon="pi pi-download"
-                    style={{ height: "1.5rem" }}
-                />
-            </div>
-        );
-    } else {
-        return <span>{node.label}</span>;
-    }
-};
-
 const FileManager = (props) => {
+    const [selectedKeys, setSelectedKeys] = useState(null);
+
+    const nodeTemplate = (node, options) => {
+        if (!node["children"]) {
+            return (
+                <div className="p-d-inline-flex">
+                    <span style={{ paddingRight: "15px" }}>
+                        {node["label"]}
+                    </span>
+                    <Button
+                        onClick={() => {
+                            // Opens a dialog box asking the user to give the downlaod path
+                            let opts = {
+                                title: `Saving ${node.label} from Vault`,
+
+                                defaultPath:
+                                    "C:\\Users\\%UserProfile%\\Desktop\\" +
+                                    node.label,
+
+                                buttonLabel: "Save",
+
+                                filters: [
+                                    {
+                                        name: "Vault File",
+                                        extensions: [node.ext],
+                                    },
+                                    { name: "All Files", extensions: ["*"] },
+                                ],
+                            };
+
+                            dialog
+                                .showSaveDialog(null, opts)
+                                .then((file) => {
+                                    // Stating whether dialog operation was cancelled or not.
+                                    if (!file.canceled) {
+                                        console.log(
+                                            "Saved At:",
+                                            file.filePath,
+                                            typeof file.filePath
+                                        );
+                                        fetch(
+                                            "http://127.7.3.0:1728/api/v1/save",
+                                            {
+                                                headers: {
+                                                    "Auth-Key": props.auth_key,
+                                                    Key: String(node.key),
+                                                    Path: file.filePath,
+                                                },
+                                            }
+                                        )
+                                            .then((response) => {
+                                                return response.json();
+                                            })
+                                            .then((data) => {
+                                                console.log(
+                                                    data
+                                                        ? "Save Done"
+                                                        : "Save Not Done"
+                                                );
+                                            });
+                                    }
+                                })
+                                .catch((err) => {
+                                    console.error(err);
+                                });
+                        }}
+                        icon="pi pi-download"
+                        style={{ height: "1.5rem" }}
+                    />
+                </div>
+            );
+        } else {
+            return <span>{node.label}</span>;
+        }
+    };
+
     if (props.locked) {
         return (
             <Card className="outline">
@@ -85,7 +98,6 @@ const FileManager = (props) => {
             </Card>
         );
     } else {
-        console.log(props.dirStruct);
         return (
             <Card className="files outline">
                 <div className="p-d-flex p-flex-column">
@@ -94,12 +106,70 @@ const FileManager = (props) => {
                             label="Download"
                             icon="pi pi-download"
                             className="p-button-raised p-button-warning"
+                            onClick={() => {
+                                // Opens a dialog box asking the user to give the downlaod path
+                                let opts = {
+                                    title: `Destination for Vault Files`,
+
+                                    defaultPath:
+                                        "C:\\Users\\%UserProfile%\\Desktop\\",
+
+                                    buttonLabel: "Select Folder",
+
+                                    properties: ["openDirectory"],
+                                };
+
+                                dialog
+                                    .showOpenDialog(null, opts)
+                                    .then((file) => {
+                                        // Stating whether dialog operation was cancelled or not.
+                                        if (!file.canceled) {
+                                            let folderPath =
+                                                file.filePaths.toString();
+                                            console.log(
+                                                "Downloaded At:",
+                                                folderPath,
+                                                file.filePaths
+                                            );
+                                            fetch(
+                                                "http://127.7.3.0:1728/api/v1/save_all",
+                                                {
+                                                    headers: {
+                                                        "Auth-Key":
+                                                            props.auth_key,
+                                                        Path: file.filePaths[0],
+                                                    },
+                                                }
+                                            )
+                                                .then((response) => {
+                                                    return response.json();
+                                                })
+                                                .then((data) => {
+                                                    console.log(
+                                                        data
+                                                            ? "Save_All Done"
+                                                            : "Save_All Not Done"
+                                                    );
+                                                });
+                                        }
+                                    })
+                                    .catch((err) => {
+                                        console.error(err);
+                                    });
+                            }}
                         />
                     </div>
                     <Tree
                         value={props.dirStruct}
                         nodeTemplate={nodeTemplate}
                         style={{ width: "100%" }}
+                        selectionMode="checkbox"
+                        selectionKeys={selectedKeys}
+                        onSelectionChange={(e) => {
+                            setSelectedKeys(e.value);
+                            console.log(props.dirStruct);
+                            console.log(e.value);
+                        }}
                     />
                 </div>
             </Card>

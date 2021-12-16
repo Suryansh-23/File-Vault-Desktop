@@ -3,22 +3,34 @@ const url = require("url");
 const { execFile } = require("child_process");
 const { app, BrowserWindow } = require("electron");
 
-execFile("./python/Vault.exe", (error, stdout, stderr) => {
-    if (error) {
-        console.error(stderr);
-        throw error;
-    }
-    console.log(stdout);
-});
-
 let mainWindow;
 let isDev = false;
+let backend;
 
 if (
     process.env.NODE_ENV !== undefined &&
     process.env.NODE_ENV === "development"
 ) {
     isDev = true;
+    backend = execFile(
+        "python",
+        ["./python/Vault.py"],
+        (error, stdout, stderr) => {
+            if (error) {
+                console.error(stderr);
+                throw error;
+            }
+            console.log(stdout);
+        }
+    );
+} else {
+    backend = execFile("./python/Vault.exe", (error, stdout, stderr) => {
+        if (error) {
+            console.error(stderr);
+            throw error;
+        }
+        console.log(stdout);
+    });
 }
 
 function createMainWindow() {
@@ -71,6 +83,7 @@ function createMainWindow() {
 app.on("ready", createMainWindow);
 
 app.on("window-all-closed", () => {
+    backend.kill("SIGTERM");
     if (process.platform !== "darwin") {
         app.quit();
     }

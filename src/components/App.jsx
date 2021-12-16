@@ -11,7 +11,14 @@ import PrimeReact from "primereact/api";
 import FileManager from "./Manager.jsx";
 import "primeflex/primeflex.css";
 
-const validate = (pswrd, setLockStatus, setPswrdHelp, setDirStruct) => {
+const validate = (
+    pswrd,
+    setLockStatus,
+    setPswrdHelp,
+    setDirStruct,
+    setAuthKey,
+    setKeys
+) => {
     fetch("http://127.7.3.0:1728/api/v1/auth", {
         headers: { "Pass-Key": pswrd },
     })
@@ -19,16 +26,16 @@ const validate = (pswrd, setLockStatus, setPswrdHelp, setDirStruct) => {
             return response.json();
         })
         .then((data) => {
-            console.log(data);
             if (data) {
-                AUTH_KEY = data;
+                setAuthKey(data);
                 setPswrdHelp({
                     msg: "Correct Password",
                     vsblty: true,
                     class: "pi pi-check-circle",
                     color: "#9aef9a",
                 });
-                getTree(setDirStruct);
+                getKeys(data, setKeys);
+                getTree(data, setDirStruct);
                 auth = true;
                 return true;
             } else {
@@ -48,10 +55,10 @@ const validate = (pswrd, setLockStatus, setPswrdHelp, setDirStruct) => {
             return;
         });
 };
-const getTree = (setDirStruct) => {
+const getTree = (authKey, setDirStruct) => {
     fetch("http://127.7.3.0:1728/api/v1/tree", {
         headers: {
-            "Auth-Key": AUTH_KEY,
+            "Auth-Key": authKey,
         },
     })
         .then((resp) => {
@@ -66,7 +73,27 @@ const getTree = (setDirStruct) => {
             return;
         });
 };
-let AUTH_KEY;
+
+const getKeys = (authKey, setKeys) => {
+    fetch("http://127.7.3.0:1728/api/v1/keys", {
+        headers: {
+            "Auth-Key": authKey,
+        },
+    })
+        .then((resp) => {
+            return resp.json();
+        })
+        .then((data) => {
+            console.log(data);
+            setKeys(JSON.parse(data));
+            return true;
+        })
+        .catch((err) => {
+            console.error(err);
+            return;
+        });
+};
+
 PrimeReact.ripple = true;
 let auth = false;
 let locked = true;
@@ -79,6 +106,8 @@ const App = () => {
     });
     const [lockStatus, setLockStatus] = useState(true);
     const [dirStruct, setDirStruct] = useState(null);
+    const [authKey, setAuthKey] = useState("");
+    const [keys, setKeys] = useState("");
     const lockRef = useRef(null);
 
     const showLockDone = () => {
@@ -118,7 +147,7 @@ const App = () => {
                     detail: "",
                     life: 2000,
                 });
-                getTree(setDirStruct);
+                getTree(authKey, setDirStruct);
                 setLockStatus(false);
                 locked = false;
             } else {
@@ -162,6 +191,18 @@ const App = () => {
                             feedback={false}
                             toggleMask
                             value={pswrd}
+                            onKeyPress={(e) => {
+                                if (e.key === "Enter") {
+                                    validate(
+                                        pswrd,
+                                        setLockStatus,
+                                        setPswrdHelp,
+                                        setDirStruct,
+                                        setAuthKey,
+                                        setKeys
+                                    );
+                                }
+                            }}
                             onChange={(e) => {
                                 setPswrd(e.target.value);
                             }}
@@ -191,7 +232,9 @@ const App = () => {
                                     pswrd,
                                     setLockStatus,
                                     setPswrdHelp,
-                                    setDirStruct
+                                    setDirStruct,
+                                    setAuthKey,
+                                    setKeys
                                 );
                             }}
                         />
@@ -213,7 +256,12 @@ const App = () => {
                     <Toast ref={lockRef} />
                 </Card>
                 <div className="p-pl-5 p-pr-5" style={{ width: "100%" }}>
-                    <FileManager dirStruct={dirStruct} locked={lockStatus} />
+                    <FileManager
+                        dirStruct={dirStruct}
+                        locked={lockStatus}
+                        auth_key={authKey}
+                        keys={keys}
+                    />
                 </div>
             </div>
             <h2 style={{ position: "absolute", bottom: 0 }} className="p-pl-5">
