@@ -4,8 +4,9 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Chip } from "primereact/chip";
 const { shell } = require("electron").remote;
+const { BrowserWindow } = require("electron").remote;
 
-const Info = () => {
+const Info = ({ lockStatus }) => {
     const [displayDialog, setDisplayDialog] = useState(false);
 
     return (
@@ -29,7 +30,26 @@ const Info = () => {
             >
                 <div className="p-d-flex p-flex-column">
                     <div className="p-d-flex">
-                        <img className="info-logo p-pr-2" src={logo} />
+                        <img
+                            className="info-logo p-pr-2"
+                            src={logo}
+                            onClick={() => {
+                                if (!lockStatus) {
+                                    let wins = BrowserWindow.getAllWindows();
+                                    wins[0].openDevTools();
+                                    console.log(
+                                        "%cYay! you've discovered an easter egg🐰🥚🦄",
+                                        `padding: 0.3rem 1.5rem; font-family: Montserrat; font-size: 1.2em; line-height: 1.4em; color: white; background: rgb(131,58,180);
+                                        background: linear-gradient(270deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%,
+                                        rgba(252,176,69,1) 100%); border-radius: 8px;`
+                                    );
+                                    console.log(
+                                        "%cHola Geeks😉, Welcome to the Dev Tools of File-Vault. Don't Do anything Mischievous",
+                                        `font-family: monospace; font-weight: 550;`
+                                    );
+                                }
+                            }}
+                        />
                         <div>
                             File Vault is an{" "}
                             <span className="info-span">

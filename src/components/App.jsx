@@ -55,6 +55,7 @@ const validate = (
                     color: "#ef9a9a",
                 });
                 setLockStatus(true);
+                locked = true;
                 auth = false;
                 return false;
             }
@@ -141,7 +142,7 @@ const App = () => {
             <div className="p-d-flex p-flex-column p-pt-2">
                 <div className="p-d-flex p-mb-2 p-jc-center">
                     <div>
-                        <Info />
+                        <Info lockStatus={lockStatus} />
                     </div>
                     <h1 className="title p-px-3">File</h1>
                     <div>

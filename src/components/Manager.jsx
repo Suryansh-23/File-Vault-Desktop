@@ -97,7 +97,10 @@ const FileManager = (props) => {
                                     .showOpenDialog(null, opts)
                                     .then((file) => {
                                         // Stating whether dialog operation was cancelled or not.
-                                        if (!file.canceled) {
+                                        if (
+                                            !file.canceled &&
+                                            file.filePaths.toString() !== ""
+                                        ) {
                                             setFolderPath(
                                                 file.filePaths.toString()
                                             );
@@ -106,6 +109,7 @@ const FileManager = (props) => {
                                                     `${folderPath}\\Vault_Files`
                                                 )
                                             ) {
+                                                setShowWarning(false);
                                                 let tmp =
                                                     Object.keys(
                                                         selectedKeys

@@ -108,9 +108,13 @@ h3 {
     align-items: center;
     justify-content: center;
 }
+
 .btns {
     padding-top: 1rem;
     justify-content: center;
+}
+.p-tree.p-component.p-tree-selectable {
+    border-radius: 10px !important;
 }
 
 p-treenode-label {
