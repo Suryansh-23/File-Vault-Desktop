@@ -1,21 +1,42 @@
 const path = require("path");
 const url = require("url");
 const { execFile } = require("child_process");
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
+const { stdout, stderr } = require("process");
 
 let mainWindow;
 let isDev = false;
 let backend;
+let auth;
+
+ipcMain.on("AUTH", (_, arg) => (auth = arg));
+
+const cleanup = () => {
+    const axios = require("axios");
+
+    axios
+        .get("http://127.7.3.0:1728/kill", {
+            headers: { "Auth-Key": auth },
+        })
+        .then((response) => {
+            stdout.write(response.data);
+        })
+        .catch((error) => {
+            stderr.write(error);
+        });
+};
 
 if (
     process.env.NODE_ENV !== undefined &&
     process.env.NODE_ENV === "development"
 ) {
     isDev = true;
+    console.log("Creating backend");
     backend = execFile(
         "python",
         ["./python/Vault.py"],
-        (error, stdout, stderr) => {
+        (error, sout, stderr) => {
+            stdout.write(`Python : ${sout}`);
             if (error) {
                 console.error(stderr);
                 throw error;
@@ -23,14 +44,6 @@ if (
             console.log(stdout);
         }
     );
-} else {
-    backend = execFile("./python/Vault.exe", (error, stdout, stderr) => {
-        if (error) {
-            console.error(stderr);
-            throw error;
-        }
-        console.log(stdout);
-    });
 }
 
 function createMainWindow() {
@@ -49,9 +62,6 @@ function createMainWindow() {
             webSecurity: false,
         },
     });
-
-    const python = execFile("python", ["./python/Vault.py"]);
-    python.stdout.on("data", () => {});
 
     let indexPath;
 
@@ -83,9 +93,12 @@ function createMainWindow() {
 app.on("ready", createMainWindow);
 
 app.on("window-all-closed", () => {
-    backend.kill("SIGTERM");
     if (process.platform !== "darwin") {
+        backend.kill("SIGTERM");
         app.quit();
+        stdout.write("JS Closed\n");
+        cleanup();
+        stdout.write("Python Closed\n");
     }
 });
 

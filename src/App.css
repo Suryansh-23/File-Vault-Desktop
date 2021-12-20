@@ -6,14 +6,28 @@
     line-height: 23px;
 }
 
+:root {
+    --primary-color: #7faef4 !important;
+}
+
+html {
+    overflow-y: hidden;
+}
+
 body {
     font-family: Montserrat;
     display: flex;
-    margin: 0;
+    margin: 0px;
+    padding: 0px;
     align-items: center;
     justify-content: center;
     background-color: var(--surface-b);
     color: white;
+}
+
+.p-scrollpanel .p-scrollpanel-bar {
+    background: var(--primary-color) !important;
+    border: 0 none;
 }
 
 .logo {
@@ -34,8 +48,43 @@ body {
     padding-left: 20px;
     padding-right: 5px;
 }
-.p-button {
+.p-button.p-component.p-button-raised {
     border-radius: 25px;
+    /* background: rgb(127, 174, 244);
+    background: linear-gradient(
+        135deg,
+        rgba(127, 174, 244, 1) 0%,
+        rgba(82, 145, 242, 1) 100%
+    ); */
+    background: rgb(127, 174, 244);
+    background: linear-gradient(
+        135deg,
+        rgba(127, 174, 244, 1) 0%,
+        rgba(44, 104, 196, 1) 100%
+    );
+    border: none;
+}
+.p-button.p-component.info-button.p-button-raised.p-button-outlined.p-button-info.p-button-icon-only {
+    border: none;
+}
+
+.p-button.p-component.info-button.p-button-raised.p-button-outlined.p-button-info.p-button-icon-only:hover {
+    background-color: #7faef4 !important;
+}
+.p-button.p-component.p-button-raised:not(.p-button-warning):hover {
+    background-color: #7faef4 !important;
+}
+
+.p-button.p-component.p-button-raised.p-button-warning {
+    background: rgb(242, 201, 76);
+    background: linear-gradient(
+        135deg,
+        rgba(242, 201, 76, 1) 0%,
+        rgba(242, 153, 74, 1) 100%
+    );
+}
+p-button.p-component.p-button-raised.p-button-warning:hover {
+    background-color: rgba(242, 201, 76, 1) !important;
 }
 
 input {
@@ -75,4 +124,75 @@ p-treenode-label {
 
 .illustration {
     max-width: 75%;
+}
+
+.p-tree .p-tree-filter-container .p-tree-filter {
+    border-width: medium;
+    border-radius: 10px;
+    border-style: solid;
+    line-height: 1.25rem;
+}
+.pi.pi-info {
+    color: white;
+}
+
+.info-button {
+    top: 0.5rem;
+    left: 0.5rem;
+    width: 2rem !important;
+    height: 2rem !important;
+    border-radius: 7px;
+    border-width: medium !important;
+    position: absolute;
+}
+.p-dialog.p-component.p-dialog-enter-done {
+    border: none;
+}
+
+.p-dialog-header {
+    justify-content: center;
+    padding-bottom: 1.5rem !important;
+}
+.p-dialog-header span {
+    font-size: 2.5rem !important;
+}
+
+.p-dialog-content,
+.p-dialog-header {
+    background: none !important;
+}
+
+.p-dialog-content {
+    text-align: justify;
+}
+
+.p-dialog.p-component.p-dialog-enter-done {
+    backdrop-filter: blur(8px) saturate(175%) !important;
+    -webkit-backdrop-filter: blur(8px) saturate(175%) !important;
+    background-color: rgba(17, 25, 40, 0.55) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.125) !important;
+}
+
+.info-logo {
+    width: 9rem;
+}
+
+.info-span {
+    font-weight: 800;
+    color: var(--primary-color);
+}
+
+.info-wiki::before {
+    content: "W";
+}
+
+.p-chip-text {
+    user-select: none;
+}
+
+.p-dialog-footer {
+    padding: 0.25rem !important;
+    border-bottom-left-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
 }
