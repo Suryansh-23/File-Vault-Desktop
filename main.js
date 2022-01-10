@@ -31,20 +31,17 @@ if (
     process.env.NODE_ENV === "development"
 ) {
     isDev = true;
-    console.log("Creating backend");
-    backend = execFile(
-        "python",
-        ["./python/Vault.py"],
-        (error, sout, stderr) => {
-            stdout.write(`Python : ${sout}`);
-            if (error) {
-                console.error(stderr);
-                throw error;
-            }
-            console.log(stdout);
-        }
-    );
 }
+
+console.log("Creating backend");
+backend = execFile(".\\python\\Vault.exe", (error, sout, stderr) => {
+    stdout.write(`Python : ${sout}`);
+    if (error) {
+        console.error(stderr);
+        throw error;
+    }
+    console.log(stdout);
+});
 
 function createMainWindow() {
     mainWindow = new BrowserWindow({
@@ -97,6 +94,9 @@ app.on("window-all-closed", () => {
         backend.kill("SIGTERM");
         app.quit();
         stdout.write("JS Closed\n");
+        cleanup();
+        cleanup();
+        cleanup();
         cleanup();
         stdout.write("Python Closed\n");
     }
