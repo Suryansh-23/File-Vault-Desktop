@@ -52,6 +52,7 @@ function createMainWindow() {
         title: "File Vault",
         show: false,
         resizable: true,
+        autoHideMenuBar: true,
         icon: `${__dirname}/assets/locker.png`,
         webPreferences: {
             enableRemoteModule: true,
